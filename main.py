@@ -16,13 +16,6 @@ LOGO='''
 filecount = 0
 copycount = 0
 
-def check_filetype(filename):
-	for filetype in FILETYPES:
-		if filename.endswith(filetype):
-			return True
-
-	return False
-
 def get_date(file):
 	try:
 		f = open(file, 'rb')
@@ -31,7 +24,6 @@ def get_date(file):
 
 	exifdata = exifread.process_file(f, stop_tag='Image DateTime')
 	f.close()
-
 	if exifdata.get('Image DateTime') == None: # If I can't find any EXIF data...
 		if platform.system() == 'Windows':
 			file_ctime = os.path.getctime(file)
@@ -66,8 +58,12 @@ def create_dirs(target):
 
 if __name__ == "__main__":
 	for element in input_path.glob('**/*'):
+		if element.is_dir():
+			print("Found dir, skipping...")
+			continue
+
 		filecount = filecount+1
-		if not check_filetype(element.name.lower()):
+		if not element.suffix.lower() in FILETYPES:
 			print(f"WARNING: {element.name} isn't a supported filetype.")
 			continue
 
@@ -85,16 +81,19 @@ if __name__ == "__main__":
 			print(f"WARNING: Couldn't create target directory \"{target_path}\"; Permission Error")
 			continue
 
+		if Path(target_path,element.name).exists():
+			print(f"File {element.name} already exists in target folder. Skipping...")
+			continue
+
 		try:
 			print(f"Copying {element.name} to {target_path}")
 			shutil.copy(element, target_path)
-			
 		except PermissionError:
 			print(f"WARNING: Couldn't copy file to target directory; PermissionError")
 			continue
 
 		copycount = copycount+1
 
-	print(f"\n\nFinished! Stats:\n  Elements Scanned:  {filecount}\n  Files Copied:  {copycount}")
+	print(f"\n\nFinished! Stats:\n  Files Scanned:  {filecount}\n  Files Copied:  {copycount}")
 	print("\n\n Thank you for using me! :D")
 	print(LOGO)
