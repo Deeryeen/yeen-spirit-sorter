@@ -1,6 +1,6 @@
 from pathlib import Path
 from datetime import datetime
-import sys, exifread, os, platform, time, shutil
+import sys, exifread, time, shutil
 
 input_path = Path(sys.argv[1])
 output_path = Path(sys.argv[2])
