@@ -15,7 +15,7 @@ LOGO='''
 filecount = 0
 copycount = 0
 
-def get_date(file):
+def get_date(file: Path):
 	try:
 		f = open(file, 'rb')
 	except PermissionError:
@@ -24,16 +24,10 @@ def get_date(file):
 	exifdata = exifread.process_file(f, stop_tag='Image DateTime')
 	f.close()
 	if exifdata.get('Image DateTime') == None: # If I can't find any EXIF data...
-		if platform.system() == 'Windows':
-			file_ctime = os.path.getctime(file)
-			creation_time = datetime.strptime(time.ctime(file_ctime), '%a %b %d %H:%M:%S %Y')
-			return str(creation_time).replace(':', '-').split(' ')
-		else:
-			file_statistics = os.stat(file)
-			try: # TODO Test this on Linux & MacOS
-				return file_statistics.st_birthtime
-			except AttributeError:
-				return file_statistics.st_mtime
+		file_stats = file.stat()
+		file_ctime = file_stats.st_mtime
+		formatted_ctime = datetime.strptime(time.ctime(file_ctime), '%a %b %d %H:%M:%S %Y')
+		return str(formatted_ctime).replace(':', '-').split(' ')
 	
 	return str(exifdata.get('Image DateTime')).replace(':', '-').split(' ')
 
