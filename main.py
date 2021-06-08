@@ -12,7 +12,6 @@ LOGO='''
  / /_/ / /___/ /___/ _, _/ / / /___/ /___/ /|  /  
 /_____/_____/_____/_/ |_| /_/_____/_____/_/ |_/   
                                                   '''
-
 filecount = 0
 copycount = 0
 
@@ -38,11 +37,6 @@ def get_date(file):
 	
 	return str(exifdata.get('Image DateTime')).replace(':', '-').split(' ')
 
-
-def copy_file(file, target):
-	pass
-
-
 def create_dirs(target):
 	if target.is_dir():
 		return
@@ -53,8 +47,6 @@ def create_dirs(target):
 			return
 		except PermissionError:
 			raise
-
-	return
 
 if __name__ == "__main__":
 	for element in input_path.glob('**/*'):
