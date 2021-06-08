@@ -1,9 +1,15 @@
 from pathlib import Path
 from datetime import datetime
-import sys, exifread, time, shutil
+import exifread, time, shutil, argparse
 
-input_path = Path(sys.argv[1])
-output_path = Path(sys.argv[2])
+parser = argparse.ArgumentParser()
+parser.add_argument('input', help='Where will I get the files?')
+parser.add_argument('target', help='Where will I put the files?')
+args = parser.parse_args()
+
+input_path = Path(args.input)
+output_path = Path(args.target)
+
 FILETYPES = ['.png', '.jpg', '.arw', '.nef', '.mp4', '.wav', '.mp3']
 LOGO='''
     ____  __________________  _______________   __
