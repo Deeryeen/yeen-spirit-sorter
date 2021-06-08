@@ -2,3 +2,6 @@ venv
 # Testing stuff
 test/
 target/
+
+# Pesky IDE files
+.vscode/
